@@ -1,0 +1,113 @@
+Taak 1: Autorisatie configureren
+• Maak een nieuwe gebruiker aan met een Username en een Password
+De gebruiker moet kunnen inloggen op de database vanuit, mogelijke opties:
+
+1. Localhost (kan alleen in database komen als lokaal op de computer ingelogd is)
+2. Vanuit elke host
+3. Vanuit een host met een bepaald IP-adres, b.v. 192.168.40.1
+4. Vanuit een host met een IP-adres binnen een bepaald subnet, b.v. 192.168.40
+
+Voorbeelden: 
+USE DatabaseName;
+CREATE USER UserName@localhost IDENTIFIED BY 'Password';
+CREATE USER UserName@'%' IDENTIFIED BY 'Password';
+CREATE USER UserName@192.168.40.1 IDENTIFIED BY 'Password';
+CREATE USER UserName@192.168.40 IDENTIFIED BY 'Password';
+
+Nieuwe gebruiker SELECT, INSERT, UPDATE, DELETE rechten geven op tabellen.
+Let op: Nooit meer rechten geven dan noodzakelijk!:
+
+Voorbeelden: 
+USE DatabaseName;
+GRANT SELECT ON TableName TO UserName;
+GRANT INSERT ON TableName TO UserName;
+GRANT UPDATE ON TableName TO UserName;
+GRANT DELETE ON TableName TO UserName
+
+
+Taak 2: Eenvoudige selectie-queries, mogelijke opties:
+1. Selecteer alle gegevens uit een tabel, gesorteerd eerst op Kolom1 en daarna op 
+Kolom2
+
+2. Selecteer Kolom1, Kolom2,… uit een tabel
+
+3. Selecteer Kolom1, Kolom2,… uit een tabel, waarvoor geldt dat de waarde in Kolom1 
+groter of gelijk is aan waarde. 
+Ander mogelijkheden: groter dan >, kleiner dan <, gelijk aan =, groter of gelijk aan >=, 
+kleiner of gelijk aan <=
+
+4. Selecteer de maximale waarde in Kolom1 uit een tabel
+Andere mogelijkheden: minimale waarde MIN, maximale waarde MAX, gemiddelde 
+waarde AVG, het aantal waarden COUNT en de som van de waarden SUM
+
+5. Selecteer gegevens uit tabel waarvoor geldt dat waarde in kolom voorkomt in een 
+reeks BETWEEN of verzameling IN of een string deels gelijk is LIKE
+
+6. Selecteer uit Tabel1 de waarde in Kolom1 en het aantal rijen in Kolom2 gegroepeerd
+op de waarden in Kolom1, waarvoor geldt dat het aantal rijen in Kolom2 groter is dan 
+waarde2
+Voorbeelden: 
+
+USE DatabaseName;
+1. SELECT * FROM TableName ORDER BY Kolom1, Kolom2;
+2. SELECT Kolom1, Kolom2,… FROM TableName;
+3. SELECT Kolom1, Kolom2,… FROM TableName; WHERE Kolom1 >= waarde;
+4. SELECT MAX(Kolom1) FROM TableName;
+5. SELECT * FROM TableName WHERE Kolom1 BETWEEN waarde1 AND waarde2;
+SELECT * FROM TableName WHERE Kolom1 IN (waarde1, waarde2,…);
+SELECT * FROM TableName WHERE Kolom1 LIKE '%waarde1%';
+6. SELECT Kolom1, COUNT(Kolom2) AS AliasName FROM Tabel1 GROUP BY Kolom1 
+HAVING COUNT(Kolom2) > waarde2;
+
+
+
+Taak 3: Complexe selectie-queries
+• Maak een query die uit Tabel1 de waarden van Kolom1, Kolom2 en Kolom3 selecteert, 
+waarvoor geldt dat de waarde in Kolom1 groter is dan de gemiddelde waarde van Kolom1
+
+• Maak een query die uit Tabel1 de waarden van Kolom1, Kolom2 en Kolom3 selecteert, 
+waarvoor geldt dat de waarde in Kolom1 niet voorkomt in Kolom1 van Tabel2 
+
+• Maak een query die Kolom1 en Kolom2 uit Tabel1, én Kolom1 en Kolom2 uit Tabel2 laat 
+zien waarvoor geldt dat de waarde in Kolom2 van Tabel1 ongelijk is aan de waarde in 
+Kolom2 van Tabel2 
+
+Voorbeelden m.b.v. sub-query: 
+
+USE DatabaseName;
+SELECT Kolom1, Kolom2, Kolom3 FROM Tabel1 WHERE Kolom1 > (SELECT 
+AVG(Kolom1) FROM TABEL1);
+
+SELECT Kolom1, Kolom2, Kolom3 FROM Tabel1 WHERE Kolom1 NOT IN (SELECT 
+Kolom1 FROM TABEL2);
+
+Voorbeelden m.b.v. JOIN:
+
+SELECT Tabel1.Kolom1, Tabel1.Kolom2, Tabel1.Kolom3
+FROM Tabel1 LEFT OUTER JOIN Tabel2
+ON Tabel1.Kolom1 = Tabel2.Kolom1
+WHERE Tabel2.Kolom1 IS NULL;
+
+SELECT Tabel1.Kolom1, Tabel1.Kolom2, Tabel2.Kolom1, Tabel2.Kolom2
+FROM Tabel1 INNER JOIN Tabel2
+ON Tabel1.Kolom1 = Tabel2.Kolom1
+WHERE Tabel1.Kolom2 <> Tabel2.Kolom2 ;
+
+
+Taak 4: Gegevens aanpassen
+1. Doe een SQL-insert in een Tabel1 waarbij Kolom1 de waarde heeft Waarde1, Kolom2 te 
+waarde heeft Waarde2 en Kolom3 de waarde Waarde3
+
+2. Verander in Tabel1 de waarde van Kolom3 in Waarde4 voor de rij waarvoor geldt dat 
+Kolom1 de waarde Waarde1 heeft
+
+3. Verwijder de gegevens van de rij in Tabel1 waarvoor geldt dat Kolom1 de waarde 
+Waarde1 heeft
+
+Voorbeelden: 
+USE DatabaseName;
+INSERT INTO Tabel1 (Kolom1, Kolom2, Kolom3,…) VALUES (Waarde1, Waarde2, 
+Waarde3,…);
+
+UPDATE Tabel1 SET Kolom3 = Waarde4 WHERE Kolom1 = Waarde1;
+DELETE FROM Tabel1 WHERE Kolom1 = Waarde1
